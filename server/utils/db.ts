@@ -1,15 +1,14 @@
-// import { Pool } from "pg";
-// import { drizzle } from "drizzle-orm/node-postgres";
-// import type { NodePgDatabase } from "drizzle-orm/node-postgres";
-// import * as schemas from "schemas-pg/schemas/index.ts";
+import { Pool } from "pg";
+import { drizzle } from "drizzle-orm/node-postgres";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import * as schemas from "schemas-pg";
 
-// let _db: NodePgDatabase<typeof schemas> | null = null;
+const globalForDb = globalThis as unknown as { pool?: Pool };
+const pool =
+	globalForDb.pool ??
+	new Pool({ connectionString: process.env.DATABASE_URL! });
 
-// export function useDb() {
-// 	if (!_db) {
-// 		const config = useRuntimeConfig();
-// 		const pool = new Pool({ connectionString: config.databaseUrl });
-// 		_db = drizzle(pool);
-// 	}
-// 	return _db;
-// }
+if (process.env.NODE_ENV !== "production") {
+	globalForDb.pool = pool;
+}
+export const db = drizzle({ client: pool });
