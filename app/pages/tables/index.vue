@@ -2,6 +2,7 @@
 	import { getTableName, is } from "drizzle-orm";
 	import { PgTable } from "drizzle-orm/pg-core";
 	import * as schemas from "schemas-pg";
+
 	const tables = Object.values(schemas).filter((item) =>
 		is(item, PgTable),
 	);
