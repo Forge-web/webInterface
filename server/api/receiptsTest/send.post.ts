@@ -1,10 +1,21 @@
-import { sendMessage } from '../../../../kafkaModule/src/producer';
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   
-  // Отправляе чек в Kafka (в топик raw_receipts)
-  await sendMessage('raw_receipts', body);
-  
-  return { success: true, message: 'Чек отправлен в Kafka' };
-}); 
+  if (!body) {
+    throw createError({ statusCode: 400, statusMessage: 'Пустое тело запроса' });
+  }
+
+  try {
+    // 🟢 HTTP-запрос к kafkaModule (REST API)
+    const response = await $fetch('http://localhost:3001/receipts', {
+      method: 'POST',
+      body,
+    });
+
+    console.log('✅ Чек отправлен в kafkaModule:', response);
+    return { success: true, message: 'Чек отправлен' };
+  } catch (error: any) {
+    console.error('❌ Ошибка:', error);
+    throw createError({ statusCode: 500, statusMessage: error.message });
+  }
+});
