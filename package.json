@@ -7,7 +7,8 @@
 		"dev": "nuxt dev",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
-		"postinstall": "nuxt prepare"
+		"postinstall": "nuxt prepare",
+		"update": "npm i schemas-pg@latest"
 	},
 	"dependencies": {
 		"@tailwindcss/vite": "^4.3.3",
@@ -15,7 +16,7 @@
 		"drizzle-orm": "^1.0.0-rc.5",
 		"nuxt": "^4.6.3",
 		"pg": "^8.23.1",
-		"schemas-pg": "^0.1.3",
+		"schemas-pg": "^0.6.0",
 		"tailwindcss": "^4.3.3",
 		"vue": "^3.5.44",
 		"vue-router": "^5.4.0"

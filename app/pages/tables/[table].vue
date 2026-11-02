@@ -22,6 +22,9 @@
 				insert mode
 			</button>
 		</div>
+		<h1 class="text-xl font-bold uppercase mb-4">
+			Таблица: {{ table }}
+		</h1>
 		<div class="flex flex-col">
 			<div v-if="insertMode"><InsertComponent :table="table" /></div>
 			<div><SelectComponent :table="table" /></div>
