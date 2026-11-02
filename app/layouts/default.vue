@@ -4,6 +4,7 @@
 
 	const navigation = [
 		{ name: "Дашборд", to: "/", icon: "home" },
+		{ name: "Чеки", to: "/receipts" },
 		{ name: "Таблицы", to: "/tables", icon: "table" },
 		{ name: "Поля", to: "/fields", icon: "fields" },
 		{ name: "Настройки", to: "/settings", icon: "settings" },

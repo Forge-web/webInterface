@@ -1,22 +1,29 @@
 <script setup lang="ts">
 	import * as schema from "schemas-pg";
+	import SelectForForeignField from "../tableFields/selectForForeignField.vue";
 	const props = defineProps<{
 		table: string;
 	}>();
-	const rawTableName = props.table;
-
-	// Функция для преобразования snake_case в camelCase
-	function toCamelCase(str: string): string {
-		return str.replace(/_([a-z])/g, (_, letter) =>
-			letter.toUpperCase(),
-		);
-	}
-
-	// Преобразуем имя из URL (payment_types) в имя из схемы (paymentTypes)
-	const tableName = toCamelCase(rawTableName);
+	const tableName = props.table;
 
 	// Берем таблицу из схемы по имени
 	const table = computed(() => (schema as any)[tableName]);
+
+	//FK таблицы
+	const foreignKeys = getTableForeignKeys(props.table);
+
+	const tablesOfForeignKeys = ref<any>({});
+
+	const formData = ref<Record<string, any>>({});
+
+	const message = ref<string | null>(null);
+
+	for (const _table of foreignKeys) {
+		const data = await $fetch(`/api/${_table.referencedTableName}`, {
+			method: "GET",
+		});
+		tablesOfForeignKeys.value[_table.referencedTableName] = data;
+	}
 
 	// Извлекаем поля и фильтруем служебные
 	const fields = computed(() => {
@@ -59,8 +66,6 @@
 		}
 	}
 
-	const formData = ref<Record<string, any>>({});
-
 	watch(
 		fields,
 		(newFields) => {
@@ -73,42 +78,32 @@
 		{ immediate: true },
 	);
 
-	const handleSubmit = () => {
-		const submitData = $fetch(`/api/${rawTableName}`, {
+	const handleSubmit = async () => {
+		const submitData = await $fetch(`/api/${tableName}`, {
 			method: "POST",
 			body: formData.value,
 		});
 		console.log(submitData);
+		if (submitData?.[0].id) {
+			formData.value = {};
+			message.value = "Запись успешно добавлена";
+		}
 	};
 </script>
 
 <template>
 	<div class="p-5 max-w-2xl mx-auto">
-		<h1 class="text-xl font-bold uppercase mb-4">
-			Таблица: {{ tableName }}
-		</h1>
-
+		<div v-if="message">{{ message }}</div>
 		<form
 			v-if="fields.length"
 			@submit.prevent="handleSubmit"
 			class="flex flex-col gap-4"
 		>
-			<div
-				v-for="field in fields"
-				:key="field.name"
-				class="flex flex-col"
-			>
-				<label class="text-xs font-bold uppercase text-gray-600 mb-1">
-					{{ field.label }}
-					<span v-if="field.required" class="text-red-500">*</span>
-				</label>
-				<input
-					v-model="formData[field.name]"
-					:type="field.type"
-					:required="field.required"
-					class="border border-gray-400 p-2 rounded focus:outline-none focus:border-black"
-				/>
-			</div>
+			<SelectForForeignField
+				:fields="fields"
+				:opt-fields="{ ...tablesOfForeignKeys }"
+				v-model="formData"
+			/>
 
 			<button
 				type="submit"
