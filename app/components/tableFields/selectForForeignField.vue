@@ -35,6 +35,7 @@
 		<select
 			v-if="isForeignKeyField(field.name)"
 			v-model="model![field.name]"
+			class="border border-gray-400 p-2 rounded focus:outline-none focus:border-black"
 		>
 			<option value="" disabled>...</option>
 			<option

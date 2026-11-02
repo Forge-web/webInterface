@@ -17,7 +17,12 @@
 		<div class="">
 			<button
 				@click="insertMode = !insertMode"
-				class="p-2 outline outline-gray-400 rounded-lg hover:bg-gray-200 cursor-pointer"
+				class="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 active:scale-[0.98]"
+				:class="
+					insertMode
+						? 'bg-indigo-600 shadow-xl shadow-indigo-300'
+						: 'bg-indigo-600'
+				"
 			>
 				insert mode
 			</button>
@@ -27,7 +32,7 @@
 		</h1>
 		<div class="flex flex-col">
 			<div v-if="insertMode"><InsertComponent :table="table" /></div>
-			<div><SelectComponent :table="table" /></div>
+			<div v-if="!insertMode"><SelectComponent :table="table" /></div>
 		</div>
 	</div>
 </template>
