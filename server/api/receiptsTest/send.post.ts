@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     // 🟢 HTTP-запрос к kafkaModule (REST API)
-    const response = await $fetch('http://localhost:3001/receipts', {
+    const response = await $fetch('http://localhost:3001/receiptsTest', {
       method: 'POST',
       body,
     });
