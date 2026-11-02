@@ -83,7 +83,7 @@
 			method: "POST",
 			body: formData.value,
 		});
-		console.log(submitData);
+
 		if (submitData?.[0].id) {
 			formData.value = {};
 			message.value = "Запись успешно добавлена";
