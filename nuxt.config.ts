@@ -9,7 +9,7 @@ export default defineNuxtConfig({
 	vite: {
 		plugins: [tailwindcss()],
 	},
-	extends: ["schemas-pg/schemas"],
+	extends: ["schemas-pg/dist"],
 	runtimeConfig: {
 		databaseUrl: process.env.DATABASE_URL,
 	},

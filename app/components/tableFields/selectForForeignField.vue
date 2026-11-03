@@ -43,7 +43,7 @@
 				:key="value.id"
 				:value="value.id"
 			>
-				{{ Object.values(value)[1] }}
+				{{ Object.values(value)[0] }}
 			</option>
 		</select>
 		<input

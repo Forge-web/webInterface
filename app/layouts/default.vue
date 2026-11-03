@@ -3,11 +3,31 @@
 	const sidebarOpen = ref(false);
 
 	const navigation = [
-		{ name: "Дашборд", to: "/", icon: "home" },
-		{ name: "Чеки", to: "/receipts" },
-		{ name: "Таблицы", to: "/tables", icon: "table" },
-		{ name: "Поля", to: "/fields", icon: "fields" },
-		{ name: "Настройки", to: "/settings", icon: "settings" },
+		{
+			name: "Дашборд",
+			to: "/",
+			icon: "material-symbols:dashboard",
+		},
+		{
+			name: "Чеки",
+			to: "/receipts",
+			icon: "material-symbols-light:receipt",
+		},
+		{
+			name: "Таблицы",
+			to: "/tables",
+			icon: "arcticons:nextcloud-tables",
+		},
+		{
+			name: "Поля",
+			to: "/fields",
+			icon: "material-symbols-light:table-rows-outline",
+		},
+		{
+			name: "Настройки",
+			to: "/settings",
+			icon: "material-symbols:settings-outline",
+		},
 	];
 
 	const isActive = (path: string) => {
@@ -94,71 +114,7 @@
 							: 'text-slate-400 hover:bg-slate-800 hover:text-white',
 					]"
 				>
-					<!-- home -->
-					<svg
-						v-if="item.icon === 'home'"
-						class="w-5 h-5 shrink-0"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.8"
-						stroke="currentColor"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"
-						/>
-					</svg>
-					<!-- table -->
-					<svg
-						v-else-if="item.icon === 'table'"
-						class="w-5 h-5 shrink-0"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.8"
-						stroke="currentColor"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0 1 12 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25v7.125m17.25-7.125v7.125"
-						/>
-					</svg>
-					<!-- fields -->
-					<svg
-						v-else-if="item.icon === 'fields'"
-						class="w-5 h-5 shrink-0"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.8"
-						stroke="currentColor"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"
-						/>
-					</svg>
-					<!-- settings -->
-					<svg
-						v-else-if="item.icon === 'settings'"
-						class="w-5 h-5 shrink-0"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.8"
-						stroke="currentColor"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281Z"
-						/>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-						/>
-					</svg>
+					<Icon :name="item.icon" size="20" />
 					<span>{{ item.name }}</span>
 				</NuxtLink>
 			</nav>

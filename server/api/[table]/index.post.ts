@@ -13,6 +13,12 @@ export default defineEventHandler(async (event) => {
 	const table = getTableByString(getRouterParam(event, "table")!);
 	const body = await readBody(event);
 
+	const filterBody = Object.fromEntries(
+		Object.entries(body).filter(
+			([key, value]) => value !== null && value !== 0 && value !== "",
+		),
+	);
+
 	if (!table) return;
-	return await createRecords(table, body);
+	return await createRecords(table, filterBody);
 });
