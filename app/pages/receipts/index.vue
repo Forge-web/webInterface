@@ -1,20 +1,10 @@
 <script setup lang="ts">
 	import { Decimal } from "decimal.js";
+	import type { Receipt } from "~/types/receipt";
+	import ReceiptDetailsModal from "~/components/modals/ReceiptDetailsModal.vue";
+	import NewReceiptModal from "~/components/modals/newReceiptModal.vue";
 
-	interface ReceiptPosition {
-		id: number;
-		name: string;
-		sum: string | number;
-	}
-
-	interface Receipt {
-		id: number;
-		seller?: string;
-		created_at?: string;
-		items: ReceiptPosition[];
-		check_sum: string;
-	}
-
+	const newReceipt = ref<boolean>(false);
 	const {
 		data: receipts,
 		pending,
@@ -27,7 +17,7 @@
 
 		return Promise.all(
 			raw.map(async (receipt) => {
-				const items = await $fetch<ReceiptPosition[]>(
+				const items = await $fetch<Receipt["items"]>(
 					`/api/receipt_positions/receipts_id/${receipt.id}`,
 				);
 
@@ -54,28 +44,21 @@
 		}
 	}
 
-	function formatMoney(value: string | number | Decimal) {
-		return new Intl.NumberFormat("ru-RU", {
-			style: "currency",
-			currency: "RUB",
-			minimumFractionDigits: 2,
-		}).format(Number(value));
+	const selectedReceipt = ref<Receipt | null>(null);
+
+	function openReceipt(receipt: Receipt) {
+		selectedReceipt.value = receipt;
 	}
 
-	function formatDate(value?: string) {
-		if (!value) return "";
-		return new Date(value).toLocaleDateString("ru-RU", {
-			day: "2-digit",
-			month: "long",
-			year: "numeric",
-		});
+	function closeReceipt() {
+		selectedReceipt.value = null;
 	}
 
 	async function sendToKafka() {
 		try {
 			await $fetch("/api/receiptsTest/send", {
 				method: "POST",
-				body: jsonPreview,
+				body: JSON.stringify(jsonPreview.value),
 			});
 		} catch (e) {
 			console.error(e);
@@ -84,23 +67,14 @@
 </script>
 
 <template>
-	<div
-		class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-10"
-	>
+	<div class="min-h-screen px-4 py-10">
 		<div class="mx-auto max-w-6xl">
 			<header
 				class="mb-10 flex flex-wrap items-end justify-between gap-4"
 			>
-				<div>
-					<h1
-						class="text-4xl font-bold tracking-tight text-slate-900"
-					>
-						Чеки
-					</h1>
-					<p class="mt-2 text-slate-500">
-						Все ваши покупки в одном месте
-					</p>
-				</div>
+				<h1 class="text-4xl font-bold tracking-tight text-slate-900">
+					Чеки
+				</h1>
 
 				<div class="flex items-center gap-3">
 					<span
@@ -138,10 +112,16 @@
 					>
 						Отправить в Kafka
 					</button>
+					<button
+						@click="newReceipt = !newReceipt"
+						class="inline-flex text-white items-center rounded-xl bg-slate-900 px-4 py-2 shadow-sm transition hover:bg-slate-700 active:scale-[0.98]"
+					>
+						<Icon name="material-symbols:add" size="20" />
+					</button>
 				</div>
 			</header>
 
-			<!-- JSON preview -->
+			<!-- JSON превью -->
 			<Transition
 				enter-active-class="transition duration-200 ease-out"
 				enter-from-class="opacity-0 -translate-y-1"
@@ -210,12 +190,17 @@
 				</p>
 			</div>
 
-			<!-- Grid -->
+			<!-- Сетка чеков -->
 			<div v-else class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 				<article
 					v-for="receipt in receipts"
 					:key="receipt.id"
-					class="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg"
+					role="button"
+					tabindex="0"
+					class="group flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-white text-left shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
+					@click="openReceipt(receipt)"
+					@keydown.enter.prevent="openReceipt(receipt)"
+					@keydown.space.prevent="openReceipt(receipt)"
 				>
 					<header
 						class="flex items-start justify-between gap-4 border-b border-slate-100 p-5"
@@ -224,12 +209,12 @@
 							<p
 								class="text-xs font-medium uppercase tracking-wider text-slate-400"
 							>
-								Чек #{{ receipt.id }}
+								Чек {{ receipt.id }}
 							</p>
 							<h2
 								class="mt-1 truncate text-lg font-semibold text-slate-900"
 							>
-								{{ receipt.seller || "Продавец не указан" }}
+								User: {{ receipt.users_id }}
 							</h2>
 							<p
 								v-if="receipt.created_at"
@@ -277,5 +262,20 @@
 				</article>
 			</div>
 		</div>
+
+		<!-- Модалка -->
+		<ReceiptDetailsModal
+			:receipt="selectedReceipt"
+			@close="closeReceipt"
+		/>
+		<NewReceiptModal
+			:open="newReceipt"
+			v-on:update:open="
+				(v) => {
+					v = !v;
+					newReceipt = !newReceipt;
+				}
+			"
+		/>
 	</div>
 </template>
