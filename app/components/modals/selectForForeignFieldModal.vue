@@ -84,7 +84,6 @@
 							&times;
 						</button>
 					</div>
-					{{}}
 					<div class="p-3 border-b">
 						<input
 							v-model="search"

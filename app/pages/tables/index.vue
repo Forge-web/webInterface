@@ -17,18 +17,9 @@
 	const cardState = ref<any[]>([]);
 
 	const groupTable = ref({
-		products: [
-			tableToObject.products,
-			tableToObject.product_types,
-			tableToObject.product_items,
-		],
-		invoice: [tableToObject.invoice],
+		products: [tableToObject.products, tableToObject.product_types],
 		payment: [tableToObject.payment_types],
 		users: [tableToObject.users, tableToObject.organizations],
-		receipts: [
-			tableToObject.receipts,
-			tableToObject.receipt_positions,
-		],
 	});
 
 	const openCard = (key: any) => {
